@@ -5,13 +5,13 @@ const promise1 = new Promise((resolve, reject) => {
     'click',
     (e) => {
       e.preventDefault();
-      resolve();
+      resolve('First promise was resolved');
     },
     { once: true },
   );
 
   setTimeout(() => {
-    reject(new Error());
+    reject(new Error('First promise was rejected'));
   }, 3000);
 });
 
@@ -20,7 +20,7 @@ const promise2 = new Promise((resolve, reject) => {
     'contextmenu',
     (e) => {
       e.preventDefault();
-      resolve();
+      resolve('Second promise was resolved');
     },
     { once: true },
   );
@@ -28,7 +28,7 @@ const promise2 = new Promise((resolve, reject) => {
   document.addEventListener(
     'click',
     () => {
-      resolve();
+      resolve('Second promise was resolved');
     },
     { once: true },
   );
@@ -39,7 +39,7 @@ const promise3 = new Promise((resolve) => {
   let leftClicked = false;
   const tryResolve = () => {
     if (rightClicked && leftClicked) {
-      resolve();
+      resolve('Third promise was resolved');
     }
   };
 
@@ -64,12 +64,12 @@ const promise3 = new Promise((resolve) => {
 });
 
 promise1
-  .then(() => createMessage('First promise was resolved'))
-  .catch(() => createMessage('First promise was rejected', true));
+  .then((message) => createMessage(message))
+  .catch((message) => createMessage(message, true));
 
-promise2.then(() => createMessage('Second promise was resolved'));
+promise2.then((message) => createMessage(message));
 
-promise3.then(() => createMessage('Third promise was resolved'));
+promise3.then((message) => createMessage(message));
 
 function createMessage(message, error = false) {
   document.body.insertAdjacentHTML(
