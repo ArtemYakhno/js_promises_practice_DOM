@@ -1,18 +1,19 @@
 'use strict';
 
 const promise1 = new Promise((resolve, reject) => {
+  const timer = setTimeout(() => {
+    reject('First promise was rejected');
+  }, 3000);
+
   document.addEventListener(
     'click',
     (e) => {
       e.preventDefault();
+      clearTimeout(timer);
       resolve('First promise was resolved');
     },
     { once: true },
   );
-
-  setTimeout(() => {
-    reject(new Error('First promise was rejected'));
-  }, 3000);
 });
 
 const promise2 = new Promise((resolve, reject) => {
