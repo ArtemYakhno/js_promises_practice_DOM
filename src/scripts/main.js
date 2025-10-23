@@ -1,27 +1,25 @@
 'use strict';
 
-let rightClicked = false;
-let leftClicked = false;
-
 const promise1 = new Promise((resolve, reject) => {
   document.addEventListener(
     'contextmenu',
     (e) => {
       e.preventDefault();
-      rightClicked = true;
       resolve();
     },
     { once: true },
   );
 
-  setTimeout(() =>  reject(new Error()), 3000);
+  setTimeout(() => {
+    reject(new Error());
+  }, 3000);
 });
 
 const promise2 = new Promise((resolve, reject) => {
   document.addEventListener(
     'contextmenu',
-    () => {
-      rightClicked = true;
+    (e) => {
+      e.preventDefault();
       resolve();
     },
     { once: true },
@@ -30,21 +28,39 @@ const promise2 = new Promise((resolve, reject) => {
   document.addEventListener(
     'click',
     () => {
-      leftClicked = true;
       resolve();
     },
     { once: true },
   );
 });
 
-const promise3 = new Promise((resolve, reject) => {
-  promise1
-    .then(() => promise2)
-    .then(() => {
-      if (rightClicked && leftClicked) {
-        resolve();
-      }
-    });
+const promise3 = new Promise((resolve) => {
+  let rightClicked = false;
+  let leftClicked = false;
+  const tryResolve = () => {
+    if (rightClicked && leftClicked) {
+      resolve();
+    }
+  };
+
+  document.addEventListener(
+    'contextmenu',
+    (e) => {
+      e.preventDefault();
+      rightClicked = true;
+      tryResolve();
+    },
+    { once: true },
+  );
+
+  document.addEventListener(
+    'click',
+    () => {
+      leftClicked = true;
+      tryResolve();
+    },
+    { once: true },
+  );
 });
 
 promise1
