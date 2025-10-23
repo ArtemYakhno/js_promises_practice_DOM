@@ -2,7 +2,7 @@
 
 const promise1 = new Promise((resolve, reject) => {
   document.addEventListener(
-    'contextmenu',
+    'click',
     (e) => {
       e.preventDefault();
       resolve();
